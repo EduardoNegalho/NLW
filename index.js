@@ -1,9 +1,14 @@
-import { select, input } from '@inquirer/prompts';
+import { select, input, checkbox } from '@inquirer/prompts';
 
-const goals = [];
+const goals = [
+    {
+        value: 'Tomar 2L de água',
+        checked: false
+    }
+];
 
 const registerGoal = async () => {
-    const goal = await input({message: 'Digite a meta: '});
+    const goal = await input({ message: 'Digite a meta: ' });
 
     if (goal.length === 0) {
         console.log('A meta não pode ser vazia.');
@@ -11,6 +16,30 @@ const registerGoal = async () => {
     }
 
     goals.push({ value: goal, checked: false })
+}
+
+const listGoals = async () => {
+    const answers = await checkbox({
+        message: "Use as setas para mudas de meta, o espaço para marcar ou desmarcar e o Enter para finalizar essa etapa.",
+        choices: [...goals],
+        instructions: false
+    });
+
+    if (answers.length === 0) {
+        console.log('Nenhuma meta selecionada!');
+        return;
+    }
+
+    goals.forEach(goal => goal.checked = false)
+
+    answers.forEach(response => {
+        const goal = goals.find(goal => goal.value === response);
+
+        goal.checked = true;
+    })
+
+    console.log('Meta(s) marcada(s) como concluída(s)');
+
 }
 
 const start = async () => {
@@ -41,7 +70,7 @@ const start = async () => {
                 console.log(goals);
                 break;
             case "listar":
-                console.log('Vamos listar');
+                await listGoals();
                 break;
             case "sair":
                 console.log('Até a próxima');
@@ -49,7 +78,7 @@ const start = async () => {
             default:
                 break;
         }
-        
+
     }
 
 }
