@@ -1,4 +1,17 @@
-import { select } from '@inquirer/prompts';
+import { select, input } from '@inquirer/prompts';
+
+const goals = [];
+
+const registerGoal = async () => {
+    const goal = await input({message: 'Digite a meta: '});
+
+    if (goal.length === 0) {
+        console.log('A meta não pode ser vazia.');
+        return;
+    }
+
+    goals.push({ value: goal, checked: false })
+}
 
 const start = async () => {
 
@@ -24,7 +37,8 @@ const start = async () => {
 
         switch (option) {
             case "cadastrar":
-                console.log('Vamos cadastrar');
+                await registerGoal();
+                console.log(goals);
                 break;
             case "listar":
                 console.log('Vamos listar');
