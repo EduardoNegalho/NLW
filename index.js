@@ -25,12 +25,12 @@ const listGoals = async () => {
         instructions: false
     });
 
+    goals.forEach(goal => goal.checked = false)
+
     if (answers.length === 0) {
         console.log('Nenhuma meta selecionada!');
         return;
     }
-
-    goals.forEach(goal => goal.checked = false)
 
     answers.forEach(response => {
         const goal = goals.find(goal => goal.value === response);
