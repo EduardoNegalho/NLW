@@ -42,6 +42,20 @@ const listGoals = async () => {
 
 }
 
+const goalsAccomplished = async() => {
+    const accomplished = goals.filter(goal => goal.checked === true);
+
+    if (accomplished.length === 0) {
+        console.log('Não exitem metas realizadas :(');
+        return;
+    }
+    
+    await select({
+        message: "Metas Realizadas",
+        choices: [...accomplished]
+    })
+} 
+
 const start = async () => {
 
     while (true) {
@@ -58,6 +72,10 @@ const start = async () => {
                     value: "listar"
                 },
                 {
+                    name: "Metas realizadas",
+                    value: "realizadas"
+                },
+                {
                     name: "Sair",
                     value: "sair"
                 },
@@ -72,6 +90,9 @@ const start = async () => {
             case "listar":
                 await listGoals();
                 break;
+            case "realizadas":
+                goalsAccomplished();
+                break;          
             case "sair":
                 console.log('Até a próxima');
                 return;
