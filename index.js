@@ -19,6 +19,11 @@ const registerGoal = async () => {
 }
 
 const listGoals = async () => {
+    if (goals.length === 0) {
+        console.log('Nenhuma meta cadastrada');
+        return;
+    }
+    
     const answers = await checkbox({
         message: "Use as setas para mudas de meta, o espaço para marcar ou desmarcar e o Enter para finalizar essa etapa.",
         choices: [...goals],
