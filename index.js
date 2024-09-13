@@ -42,19 +42,33 @@ const listGoals = async () => {
 
 }
 
-const goalsAccomplished = async() => {
-    const accomplished = goals.filter(goal => goal.checked === true);
+const goalsAccomplished = async () => {
+    const accomplished = goals.filter(goal => goal.checked);
 
     if (accomplished.length === 0) {
         console.log('Não exitem metas realizadas :(');
         return;
     }
-    
+
     await select({
-        message: "Metas Realizadas",
+        message: `Metas Realizadas ${accomplished.length}`,
         choices: [...accomplished]
     })
-} 
+}
+
+const goalsOpen = async () => {
+    const open = goals.filter(goal => !goal.checked);
+
+    if (open.length === 0) {
+        console.log('Nenhuma meta aberta :)');
+        return;
+    }
+
+    await select({
+        message: `Metas Abertas ${open.length}`,
+        choices: [...open]
+    })
+}
 
 const start = async () => {
 
@@ -76,6 +90,10 @@ const start = async () => {
                     value: "realizadas"
                 },
                 {
+                    name: "Metas abertas",
+                    value: "abertas"
+                },
+                {
                     name: "Sair",
                     value: "sair"
                 },
@@ -91,8 +109,11 @@ const start = async () => {
                 await listGoals();
                 break;
             case "realizadas":
-                goalsAccomplished();
-                break;          
+                await goalsAccomplished();
+                break;
+            case "abertas":
+                await goalsOpen();
+                break;
             case "sair":
                 console.log('Até a próxima');
                 return;
