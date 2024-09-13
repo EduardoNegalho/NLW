@@ -1,13 +1,23 @@
 import { select, input, checkbox } from '@inquirer/prompts';
+import { promises as fs } from 'fs';
 
 let message = 'Bem-Vindo ao App de Metas';
 
-let goals = [
-    {
-        value: 'Tomar 2L de água',
-        checked: false
+let goals;
+
+const loadGoals = async () => {
+    try {
+        const data = await fs.readFile("goals.json", "utf-8");
+        goals = JSON.parse(data);
+    } 
+    catch (error) {
+        goals = [];
     }
-];
+}
+
+const saveGoals = async () => {
+    await fs.writeFile("goals.json", JSON.stringify(goals, null, 2));
+}
 
 const registerGoal = async () => {
     const goal = await input({ message: 'Digite a meta: ' });
@@ -80,6 +90,11 @@ const goalsOpen = async () => {
 }
 
 const deleteGoals = async () => {
+    if (goals.length === 0) {
+        message = 'Nenhuma meta cadastrada';
+        return;
+    }
+
     const unmarkedGoals = goals.map(goal => ({value: goal.value, checked: false}))
 
     const itensToDelete = await checkbox({
@@ -111,10 +126,11 @@ const showMessage = () => {
 }
 
 const start = async () => {
+    await loadGoals();
 
     while (true) {
         showMessage();
-
+        await saveGoals();
 
         const option = await select({
             message: "Menu >",
