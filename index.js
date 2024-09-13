@@ -1,6 +1,6 @@
 import { select, input, checkbox } from '@inquirer/prompts';
 
-const goals = [
+let goals = [
     {
         value: 'Tomar 2L de água',
         checked: false
@@ -70,6 +70,27 @@ const goalsOpen = async () => {
     })
 }
 
+const deleteGoals = async () => {
+    const unmarkedGoals = goals.map(goal => ({value: goal.value, checked: false}))
+
+    const itensToDelete = await checkbox({
+        message: "Selecione item para deletar.",
+        choices: [...unmarkedGoals],
+        instructions: false
+    });
+
+    if (itensToDelete.length === 0) {
+        console.log('Nenhum item para deletar.');
+        return;
+    }
+
+    itensToDelete.forEach(item => {
+        goals = goals.filter(goal => goal.value !== item)
+    })
+
+    console.log('Meta(s) deleta(s) com sucesso.');
+}
+
 const start = async () => {
 
     while (true) {
@@ -94,6 +115,10 @@ const start = async () => {
                     value: "abertas"
                 },
                 {
+                    name: "Deletar metas",
+                    value: "deletar"
+                },
+                {
                     name: "Sair",
                     value: "sair"
                 },
@@ -113,6 +138,9 @@ const start = async () => {
                 break;
             case "abertas":
                 await goalsOpen();
+                break;
+            case "deletar":
+                await deleteGoals();
                 break;
             case "sair":
                 console.log('Até a próxima');
